@@ -20,121 +20,6 @@ import machine.Stack.StackFrame;
  * @author SillyFreak
  */
 public class Machine {
-    public static void main(String[] args) {
-        Machine machine = new Machine();
-        Memory mem = machine.memory;
-        Stack s = machine.stack;
-        
-        Method add = add(new Method(mem, 0x0000)); //add (II)I
-        
-        Method mul = mul(new Method(mem, 0x0100)); //mul (II)I
-        
-        Method square = square(new Method(mem, 0x0200), mul); //square (I)I
-        
-        Method swap = swap(new Method(mem, 0x0300)); //swap (*I*I)V
-        
-        Method swap2 = swap2(new Method(mem, 0x0400)); //swap (II)II
-        
-        s.setStackItem(0, 1);
-        s.setStackItem(4, 2);
-        s.increaseSP(8);
-        
-        StackFrame f = s.allocateFrame(null, 0xFFFF, swap2.getAddress());
-        machine.setPC(f.getMethod().getCodeAddress());
-        
-        while(f != null) {
-            System.out.printf("0x%04X%n", s.getSP());
-            s.print();
-            System.out.println();
-            System.out.printf("0x%04X  0x%04X%n", f.getMethod().getAddress(), machine.getPC());
-            f.getMethod().print();
-            f = machine.executeInstruction(f);
-        }
-        
-        System.out.printf("0x%04X%n", s.getSP());
-        s.print();
-        
-        System.out.println(s.getStackItem(-8));
-        System.out.println(s.getStackItem(-4));
-    }
-    
-    private static Method add(Method m) {
-        m.setCodeUByte(0, ILOAD_0);
-        m.setCodeUByte(1, ILOAD_1);
-        m.setCodeUByte(2, IADD);
-        m.setCodeUByte(3, IRETURN);
-        m.setParameters(2);
-        m.setReturns(1);
-        m.setMaxLocals(2);
-        m.setMaxStack(2);
-        m.setCodeSize(4);
-        
-        return m;
-    }
-    
-    private static Method mul(Method m) {
-        m.setCodeUByte(0, ILOAD_0);
-        m.setCodeUByte(1, ILOAD_1);
-        m.setCodeUByte(2, IMUL);
-        m.setCodeUByte(3, IRETURN);
-        m.setParameters(2);
-        m.setReturns(1);
-        m.setMaxLocals(2);
-        m.setMaxStack(2);
-        m.setCodeSize(4);
-        
-        return m;
-    }
-    
-    private static Method square(Method m, Method mul) {
-        m.setCodeUByte(0, ILOAD_0);
-        m.setCodeUByte(1, ILOAD_0);
-        m.setCodeUByte(2, CALL);
-        m.setCodeUShort(3, mul.getAddress());
-        m.setCodeUByte(5, IRETURN);
-        m.setParameters(1);
-        m.setReturns(1);
-        m.setMaxLocals(1);
-        m.setMaxStack(2);
-        m.setCodeSize(6);
-        
-        return m;
-    }
-    
-    private static Method swap(Method m) {
-        m.setCodeUByte(0, ILOAD_0);
-        m.setCodeUByte(1, IPLOAD);
-        m.setCodeUByte(2, ISTORE_2);
-        m.setCodeUByte(3, ILOAD_0);
-        m.setCodeUByte(4, ILOAD_1);
-        m.setCodeUByte(5, IPLOAD);
-        m.setCodeUByte(6, IPSTORE);
-        m.setCodeUByte(7, ILOAD_1);
-        m.setCodeUByte(8, ILOAD_2);
-        m.setCodeUByte(9, IPSTORE);
-        m.setCodeUByte(10, RETURN);
-        m.setParameters(2);
-        m.setReturns(0);
-        m.setMaxLocals(3);
-        m.setMaxStack(2);
-        m.setCodeSize(11);
-        
-        return m;
-    }
-    
-    private static Method swap2(Method m) {
-        m.setCodeUByte(0, ILOAD_1);
-        m.setCodeUByte(1, ILOAD_0);
-        m.setCodeUByte(2, RETURN);
-        m.setParameters(2);
-        m.setReturns(2);
-        m.setMaxLocals(2);
-        m.setMaxStack(2);
-        m.setCodeSize(3);
-        
-        return m;
-    }
-    
     private final Memory memory;
     private final Stack  stack;
     private int          pc;
@@ -142,6 +27,14 @@ public class Machine {
     public Machine() {
         memory = new Memory(0x10000);
         stack = new Stack(memory, 0x1000);
+    }
+    
+    public Memory getMemory() {
+        return memory;
+    }
+    
+    public Stack getStack() {
+        return stack;
     }
     
     public void setPC(int pc) {
