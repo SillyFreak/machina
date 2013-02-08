@@ -67,11 +67,11 @@ public class MethodBuilder {
     public MethodBuilder addPtrInsn(int var, boolean wide) {
         if(wide) {
             m.setCodeUByte(codeSize, WIDE);
-            m.setCodeUByte(codeSize + 1, IPTR);
+            m.setCodeUByte(codeSize + 1, PTR);
             m.setCodeUShort(codeSize + 2, var);
             codeSize += 4;
         } else {
-            m.setCodeUByte(codeSize, IPTR);
+            m.setCodeUByte(codeSize, PTR);
             m.setCodeUByte(codeSize + 1, var);
             codeSize += 2;
         }

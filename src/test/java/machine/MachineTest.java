@@ -26,10 +26,10 @@ public class MachineTest {
     private static Method add(Machine m, int address) {
         MethodBuilder mb = new MethodBuilder(new Method(m.getMemory(), address));
         mb.setMeta(2, 1, 2, 2);
-        mb.addInsn(ILOAD_0);
-        mb.addInsn(ILOAD_1);
+        mb.addInsn(LOAD4_0);
+        mb.addInsn(LOAD4_1);
         mb.addInsn(IADD);
-        mb.addInsn(IRETURN);
+        mb.addInsn(RETURN);
         
         return mb.finish();
     }
@@ -37,10 +37,10 @@ public class MachineTest {
     private static Method mul(Machine m, int address) {
         MethodBuilder mb = new MethodBuilder(new Method(m.getMemory(), address));
         mb.setMeta(2, 1, 2, 2);
-        mb.addInsn(ILOAD_0);
-        mb.addInsn(ILOAD_1);
+        mb.addInsn(LOAD4_0);
+        mb.addInsn(LOAD4_1);
         mb.addInsn(IMUL);
-        mb.addInsn(IRETURN);
+        mb.addInsn(RETURN);
         
         return mb.finish();
     }
@@ -48,10 +48,10 @@ public class MachineTest {
     private static Method square(Machine m, int address, Method mul) {
         MethodBuilder mb = new MethodBuilder(new Method(m.getMemory(), address));
         mb.setMeta(1, 1, 1, 2);
-        mb.addInsn(ILOAD_0);
-        mb.addInsn(ILOAD_0);
+        mb.addInsn(LOAD4_0);
+        mb.addInsn(LOAD4_0);
         mb.addCallInsn(mul);
-        mb.addInsn(IRETURN);
+        mb.addInsn(RETURN);
         
         return mb.finish();
     }
@@ -59,16 +59,16 @@ public class MachineTest {
     private static Method swap(Machine m, int address) {
         MethodBuilder mb = new MethodBuilder(new Method(m.getMemory(), address));
         mb.setMeta(2, 0, 3, 2);
-        mb.addInsn(ILOAD_0);
-        mb.addInsn(IPLOAD);
-        mb.addInsn(ISTORE_2);
-        mb.addInsn(ILOAD_0);
-        mb.addInsn(ILOAD_1);
-        mb.addInsn(IPLOAD);
-        mb.addInsn(IPSTORE);
-        mb.addInsn(ILOAD_1);
-        mb.addInsn(ILOAD_2);
-        mb.addInsn(IPSTORE);
+        mb.addInsn(LOAD4_0);
+        mb.addInsn(PLOAD4);
+        mb.addInsn(STORE4_2);
+        mb.addInsn(LOAD4_0);
+        mb.addInsn(LOAD4_1);
+        mb.addInsn(PLOAD4);
+        mb.addInsn(PSTORE4);
+        mb.addInsn(LOAD4_1);
+        mb.addInsn(LOAD4_2);
+        mb.addInsn(PSTORE4);
         mb.addInsn(RETURN);
         
         return mb.finish();
@@ -77,8 +77,8 @@ public class MachineTest {
     private static Method swap2(Machine m, int address) {
         MethodBuilder mb = new MethodBuilder(new Method(m.getMemory(), address));
         mb.setMeta(2, 2, 2, 2);
-        mb.addInsn(ILOAD_1);
-        mb.addInsn(ILOAD_0);
+        mb.addInsn(LOAD4_1);
+        mb.addInsn(LOAD4_0);
         mb.addInsn(RETURN);
         
         return mb.finish();
@@ -92,8 +92,8 @@ public class MachineTest {
         Method add = add(m, 0x0000);
         
         //push parameters
-        s.setStackItem(0x0, 0x0001);
-        s.setStackItem(0x4, 0x0002);
+        s.setInt(0x0, 0x0001);
+        s.setInt(0x4, 0x0002);
         s.increaseSP(0x8);
         
         //"call" main function
@@ -106,7 +106,7 @@ public class MachineTest {
             f = m.executeInstruction(f);
         
         //compare results
-        int result = s.getStackItem(-0x4);
+        int result = s.getInt(-0x4);
         System.out.printf("0x%04X%n", result);
         Assert.assertEquals(3, result);
     }
@@ -120,7 +120,7 @@ public class MachineTest {
         Method square = square(m, 0x0100, mul);
         
         //push parameters
-        s.setStackItem(0x0, 0x0003);
+        s.setInt(0x0, 0x0003);
         s.increaseSP(0x4);
         
         //"call" main function
@@ -133,7 +133,7 @@ public class MachineTest {
             f = m.executeInstruction(f);
         
         //compare results
-        int result = s.getStackItem(-0x4);
+        int result = s.getInt(-0x4);
         System.out.printf("0x%04X%n", result);
         Assert.assertEquals(9, result);
     }
@@ -148,8 +148,8 @@ public class MachineTest {
         //push parameters
         m.getMemory().setInt(0x0100, 0x0001);
         m.getMemory().setInt(0x0104, 0x0002);
-        s.setStackItem(0x0, 0x0100);
-        s.setStackItem(0x4, 0x0104);
+        s.setInt(0x0, 0x0100);
+        s.setInt(0x4, 0x0104);
         s.increaseSP(0x8);
         
         //"call" main function
@@ -177,8 +177,8 @@ public class MachineTest {
         Method swap2 = swap2(m, 0x0000);
         
         //push parameters
-        s.setStackItem(0x0, 0x0001);
-        s.setStackItem(0x4, 0x0002);
+        s.setInt(0x0, 0x0001);
+        s.setInt(0x4, 0x0002);
         s.increaseSP(0x8);
         
         //"call" main function
@@ -191,8 +191,8 @@ public class MachineTest {
             f = m.executeInstruction(f);
         
         //compare results
-        int result1 = s.getStackItem(-0x8);
-        int result2 = s.getStackItem(-0x4);
+        int result1 = s.getInt(-0x8);
+        int result2 = s.getInt(-0x4);
         System.out.printf("0x%04X 0x%04X%n", result1, result2);
         Assert.assertEquals(2, result1);
         Assert.assertEquals(1, result2);

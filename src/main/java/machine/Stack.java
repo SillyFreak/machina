@@ -41,12 +41,36 @@ public class Stack {
         sp += offset;
     }
     
-    public void setStackItem(int offset, int item) {
+    public void setInt(int offset, int item) {
         memory.setInt(sp + offset, item);
     }
     
-    public int getStackItem(int offset) {
+    public int getInt(int offset) {
         return memory.getInt(sp + offset);
+    }
+    
+    public void setLong(int offset, long item) {
+        memory.setLong(sp + offset, item);
+    }
+    
+    public long getLong(int offset) {
+        return memory.getLong(sp + offset);
+    }
+    
+    public void setFloat(int offset, float item) {
+        memory.setFloat(sp + offset, item);
+    }
+    
+    public float getFloat(int offset) {
+        return memory.getFloat(sp + offset);
+    }
+    
+    public void setDouble(int offset, double item) {
+        memory.setDouble(sp + offset, item);
+    }
+    
+    public double getDouble(int offset) {
+        return memory.getDouble(sp + offset);
     }
     
     /**
@@ -73,8 +97,7 @@ public class Stack {
      * 
      * The frame's {@code returnAddress} is returned.
      */
-    public int deallocateFrame(StackFrame frame) {
-        int returnAddress = frame.getReturnAddress();
+    public StackFrame deallocateFrame(StackFrame frame) {
         int returns = frame.method.getReturns();
         int address = frame.getAddress(), bottom = frame.getBottomOfStack();
         for(int i = 0; i < returns; i++) {
@@ -82,7 +105,7 @@ public class Stack {
         }
         sp = address + returns * 4;
         
-        return returnAddress;
+        return frame.frame;
     }
     
     public void print() {
@@ -106,10 +129,6 @@ public class Stack {
             return address;
         }
         
-        public StackFrame getFrame() {
-            return frame;
-        }
-        
         public Method getMethod() {
             return method;
         }
@@ -126,12 +145,20 @@ public class Stack {
             return memory.getUShort(getBottomOfStack() - 2);
         }
         
-        public void setLocal(int index, int item) {
+        public void setInt(int index, int item) {
             memory.setInt(address + index, item);
         }
         
-        public int getLocal(int index) {
+        public int getInt(int index) {
             return memory.getInt(address + index);
+        }
+        
+        public void setLong(int index, long item) {
+            memory.setLong(address + index, item);
+        }
+        
+        public long getLong(int index) {
+            return memory.getLong(address + index);
         }
         
         public void print() {
