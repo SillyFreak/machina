@@ -125,26 +125,26 @@ public interface Opcodes {
     int CALL         = 99;
     int RETURN       = 100;
     
+    int IINC         = 101;
+    
+    int I2L          = 102;
+    int I2F          = 103;
+    int I2D          = 104;
+    int L2I          = 105;
+    int L2F          = 106;
+    int L2D          = 107;
+    int F2I          = 108;
+    int F2L          = 109;
+    int F2D          = 110;
+    int D2I          = 111;
+    int D2L          = 112;
+    int D2F          = 113;
+    int I2B          = 114;
+    int I2C          = 115;
+    int I2S          = 116;
+    
     //TODO
     
-    int IINC         = 132; //
-                            
-    int I2L          = 133; //
-    int I2F          = 134; //
-    int I2D          = 135; //
-    int L2I          = 136; //
-    int L2F          = 137; //
-    int L2D          = 138; //
-    int F2I          = 139; //
-    int F2L          = 140; //
-    int F2D          = 141; //
-    int D2I          = 142; //
-    int D2L          = 143; //
-    int D2F          = 144; //
-    int I2B          = 145; //
-    int I2C          = 146; //
-    int I2S          = 147; //
-                            
     int LCMP         = 148; //
     int FCMPL        = 149; //
     int FCMPG        = 150; //

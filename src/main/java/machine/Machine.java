@@ -356,8 +356,8 @@ public class Machine {
                 break;
             }
             case SHL8: {
-                stack.setLong(-16, stack.getLong(-16) << stack.getLong(-8));
-                stack.increaseSP(-8);
+                stack.setLong(-12, stack.getLong(-12) << stack.getLong(-4));
+                stack.increaseSP(-4);
                 break;
             }
             case SHR4: {
@@ -366,8 +366,8 @@ public class Machine {
                 break;
             }
             case SHR8: {
-                stack.setLong(-16, stack.getLong(-16) >> stack.getLong(-8));
-                stack.increaseSP(-8);
+                stack.setLong(-12, stack.getLong(-12) >> stack.getLong(-4));
+                stack.increaseSP(-4);
                 break;
             }
             case USHR4: {
@@ -376,9 +376,8 @@ public class Machine {
                 break;
             }
             case USHR8: {
-                //TODO right operands?
-                stack.setLong(-16, stack.getLong(-16) >>> stack.getLong(-8));
-                stack.increaseSP(-8);
+                stack.setLong(-12, stack.getLong(-12) >>> stack.getLong(-4));
+                stack.increaseSP(-4);
                 break;
             }
             case AND4: {
@@ -421,6 +420,81 @@ public class Machine {
             case RETURN: {
                 setPC(f.getReturnAddress());
                 f = stack.deallocateFrame(f);
+                break;
+            }
+            case IINC: {
+                int index = memory.getUByte(getPC());
+                int value = memory.getByte(getPC() + 1);
+                increasePC(2);
+                f.setInt(index * 4, f.getInt(index * 4) + value);
+                break;
+            }
+            case I2L: {
+                stack.setLong(-4, stack.getInt(-4));
+                stack.increaseSP(4);
+                break;
+            }
+            case I2F: {
+                stack.setFloat(-4, stack.getInt(-4));
+                break;
+            }
+            case I2D: {
+                stack.setDouble(-4, stack.getInt(-4));
+                stack.increaseSP(4);
+                break;
+            }
+            case L2I: {
+                stack.setInt(-8, (int) stack.getLong(-8));
+                stack.increaseSP(-4);
+                break;
+            }
+            case L2F: {
+                stack.setFloat(-8, stack.getLong(-8));
+                stack.increaseSP(-4);
+                break;
+            }
+            case L2D: {
+                stack.setDouble(-8, stack.getLong(-8));
+                break;
+            }
+            case F2I: {
+                stack.setInt(-4, (int) stack.getFloat(-4));
+                break;
+            }
+            case F2L: {
+                stack.setLong(-4, (long) stack.getFloat(-4));
+                stack.increaseSP(4);
+                break;
+            }
+            case F2D: {
+                stack.setDouble(-4, stack.getFloat(-4));
+                stack.increaseSP(4);
+                break;
+            }
+            case D2I: {
+                stack.setInt(-8, (int) stack.getDouble(-8));
+                stack.increaseSP(-4);
+                break;
+            }
+            case D2L: {
+                stack.setLong(-8, (int) stack.getDouble(-8));
+                break;
+            }
+            case D2F: {
+                stack.setFloat(-8, (int) stack.getDouble(-8));
+                stack.increaseSP(-4);
+                break;
+            }
+            case I2B: {
+                stack.setInt(-4, (byte) stack.getInt(-4));
+                break;
+            }
+            case I2C: {
+                stack.setInt(-4, (char) stack.getInt(-4));
+                break;
+            }
+            case I2S: {
+                stack.setInt(-4, (short) stack.getInt(-4));
                 break;
             }
             default:
